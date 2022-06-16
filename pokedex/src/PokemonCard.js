@@ -10,6 +10,7 @@ const PokemonCard = (props) => {
   };
 
   return (
+    <div className="html" style={props.item.types[0]}>
     <div className="card-container" onClick={handleClick}>
       <div className="pokemon-name-title">
         <h1 className="">{props.item.name}</h1>
@@ -21,6 +22,7 @@ const PokemonCard = (props) => {
         <h5 className={props.item.types[0]}>{props.item.types[0]}</h5>
         <h5 className={props.item.types[1]}>{props.item.types[1]}</h5>
       </div>
+    </div>
     </div>
   );
 };

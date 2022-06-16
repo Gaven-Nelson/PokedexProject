@@ -5,7 +5,7 @@ import App from "../App";
 const Pokemon = () => {
   let { pokemonId } = useParams();
 
-  return console.log(pokemonId);
+return console.log(pokemonId);
 };
 
 export default Pokemon;

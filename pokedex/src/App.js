@@ -100,9 +100,9 @@ const App = () => {
 @import url('http://fonts.cdnfonts.com/css/pokemon-solid');
 </style>P o k é d e x</h1>
       <div className="app-navigation-header">
-        <button className="back-arrow" onClick={handleClickMinus}>
+        <div className="back-arrow2"><button className="back-arrow" onClick={handleClickMinus}>
           &#10094;
-        </button>
+        </button></div>
         <div className="search-bar">
           <div className="wrapper">
             <img
@@ -121,9 +121,10 @@ const App = () => {
             />
           </div>
         </div>
+        <div className="forward-arrow2">
         <button className="forward-arrow" onClick={handleClickPlus}>
           &#10095;
-        </button>
+        </button></div>
       </div>
 
       <div className="app-container">
