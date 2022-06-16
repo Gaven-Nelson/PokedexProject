@@ -4,7 +4,6 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import PokemonCard from "./PokemonCard";
 import pikachu from ".//runningPikachu.gif";
 
-
 const App = () => {
   const [items, setItems] = useState([]);
   const [hasError, setHasError] = useState(false);
@@ -27,19 +26,20 @@ const App = () => {
   }
 
   let { pageNumber = 1 } = useParams();
-
+  let searchPageNumber = 1;
   const navigate = useNavigate();
 
   const handleSearchInput = debounce((event) => {
     setSearchTerm(event.target.value);
-    console.log(searchTerm);
   }, 500);
 
   //wraps to page 37 if minus is clicked on page 1
   const handleClickMinus = (event) => {
     if (pageNumber > 1) {
       pageNumber = pageNumber - 1;
-    } else if (pageNumber == 1) {pageNumber = 37}
+    } else if (pageNumber == 1) {
+      pageNumber = 37;
+    }
 
     navigate("/pokemon/page/" + pageNumber);
   };
@@ -48,13 +48,15 @@ const App = () => {
   const handleClickPlus = (event) => {
     if (pageNumber < 37) {
       pageNumber = +pageNumber + +1;
-    } else if (pageNumber == 37) {pageNumber = 1}
+    } else if (pageNumber == 37) {
+      pageNumber = 1;
+    }
 
     navigate("/pokemon/page/" + pageNumber);
   };
 
   useEffect(() => {
-    const nameUrl = `https://intern-pokedex.myriadapps.com/api/v1/pokemon/?name=${searchTerm}`;
+    const nameUrl = `https://intern-pokedex.myriadapps.com/api/v1/pokemon?page=${searchPageNumber}&name=${searchTerm}`;
     const pageUrl = `https://intern-pokedex.myriadapps.com/api/v1/pokemon/?page=${pageNumber}`;
 
     const fetchPageData = async () => {
@@ -83,7 +85,7 @@ const App = () => {
     } else if (pageNumber) {
       fetchPageData();
     }
-  }, [pageNumber, searchTerm]);
+  }, [pageNumber, searchTerm, searchPageNumber]);
 
   if (loading) {
     return (
@@ -96,13 +98,18 @@ const App = () => {
 
   return (
     <div className="page-container2">
-      <h1 className="app-title"><style>
-@import url('http://fonts.cdnfonts.com/css/pokemon-solid');
-</style>P o k é d e x</h1>
+      <h1 className="app-title">
+        <style>
+          @import url('http://fonts.cdnfonts.com/css/pokemon-solid');
+        </style>
+        P o k é d e x
+      </h1>
       <div className="app-navigation-header">
-        <div className="back-arrow2"><button className="back-arrow" onClick={handleClickMinus}>
-          &#10094;
-        </button></div>
+        <div className="back-arrowContainer">
+          <button className="back-arrow" onClick={handleClickMinus}>
+            &#10094;
+          </button>
+        </div>
         <div className="search-bar">
           <div className="wrapper">
             <img
@@ -115,16 +122,18 @@ const App = () => {
               placeholder="Search"
               onChange={handleSearchInput}
             />
+
             <img
               className="clear-icon"
               src="data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDUxLjk3NiA1MS45NzYiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxLjk3NiA1MS45NzY7IiB4bWw6c3BhY2U9InByZXNlcnZlIiB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4Ij4KPGc+Cgk8cGF0aCBkPSJNNDQuMzczLDcuNjAzYy0xMC4xMzctMTAuMTM3LTI2LjYzMi0xMC4xMzgtMzYuNzcsMGMtMTAuMTM4LDEwLjEzOC0xMC4xMzcsMjYuNjMyLDAsMzYuNzdzMjYuNjMyLDEwLjEzOCwzNi43NywwICAgQzU0LjUxLDM0LjIzNSw1NC41MSwxNy43NCw0NC4zNzMsNy42MDN6IE0zNi4yNDEsMzYuMjQxYy0wLjc4MSwwLjc4MS0yLjA0NywwLjc4MS0yLjgyOCwwbC03LjQyNS03LjQyNWwtNy43NzgsNy43NzggICBjLTAuNzgxLDAuNzgxLTIuMDQ3LDAuNzgxLTIuODI4LDBjLTAuNzgxLTAuNzgxLTAuNzgxLTIuMDQ3LDAtMi44MjhsNy43NzgtNy43NzhsLTcuNDI1LTcuNDI1Yy0wLjc4MS0wLjc4MS0wLjc4MS0yLjA0OCwwLTIuODI4ICAgYzAuNzgxLTAuNzgxLDIuMDQ3LTAuNzgxLDIuODI4LDBsNy40MjUsNy40MjVsNy4wNzEtNy4wNzFjMC43ODEtMC43ODEsMi4wNDctMC43ODEsMi44MjgsMGMwLjc4MSwwLjc4MSwwLjc4MSwyLjA0NywwLDIuODI4ICAgbC03LjA3MSw3LjA3MWw3LjQyNSw3LjQyNUMzNy4wMjIsMzQuMTk0LDM3LjAyMiwzNS40NiwzNi4yNDEsMzYuMjQxeiIgZmlsbD0iIzAwMDAwMCIvPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+CjxnPgo8L2c+Cjwvc3ZnPgo="
             />
           </div>
         </div>
-        <div className="forward-arrow2">
-        <button className="forward-arrow" onClick={handleClickPlus}>
-          &#10095;
-        </button></div>
+        <div className="forward-arrowContainer">
+          <button className="forward-arrow" onClick={handleClickPlus}>
+            &#10095;
+          </button>
+        </div>
       </div>
 
       <div className="app-container">
